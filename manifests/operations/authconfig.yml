@@ -1,0 +1,19 @@
+---
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/frontend
+  value:
+    tls: false
+    listen: 389
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/backend
+  value:
+    datastore: config
+    basedn: "dc=glauth,dc=com"
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/api
+  value:
+    enabled: true
+    tls: false
+    listen: 5555

@@ -1,0 +1,23 @@
+---
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/groups?/-
+  value:
+    name: superheros
+    unixid: 5501
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/groups?/-
+  value:
+    name: svcaccts
+    unixid: 5502
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/groups?/-
+  value:
+    name: vpn
+    unixid: 5503
+    includegroups:
+      - 5501
+      - 5502
+

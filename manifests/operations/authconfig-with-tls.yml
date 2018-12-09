@@ -1,0 +1,45 @@
+---
+# Create the certificates
+- type: replace
+  path: /variables?/-
+  value:
+    name: glauth_frontend
+    type: certificate
+    options:
+      self_sign: true
+      common_name: glauth.com
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: glauth_api
+    type: certificate
+    options:
+      self_sign: true
+      common_name: glauth.com
+
+# Configure the LDAP directory service on port 636 with TLS enabled using the generated certificate
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/frontend
+  value:
+    tls: true
+    listen: 636
+    certificate: ((glauth_frontend.certificate))
+    private_key: ((glauth_frontend.private_key))
+
+# Configure the base DN
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/backend
+  value:
+    datastore: config
+    basedn: "dc=glauth,dc=com"
+
+# Configure the API service on port 5555 with TLS enabled using the generated certificate
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/api
+  value:
+    enabled: true
+    tls: true
+    listen: 5555
+    certificate: ((glauth_api.certificate))
+    private_key: ((glauth_api.private_key))

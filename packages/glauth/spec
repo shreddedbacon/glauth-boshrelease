@@ -1,0 +1,7 @@
+---
+name: glauth
+
+dependencies: []
+
+files:
+  - glauth/glauth

@@ -1,0 +1,5 @@
+check process glauth
+  with pidfile /var/vcap/sys/run/glauth/pid
+  start program "/var/vcap/jobs/glauth/bin/glauth_ctl start"
+  stop program "/var/vcap/jobs/glauth/bin/glauth_ctl stop"
+  group vcap

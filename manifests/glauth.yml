@@ -1,0 +1,31 @@
+---
+name: glauth
+
+releases:
+- name: glauth
+  version: latest
+
+stemcells:
+- os: ubuntu-trusty
+  alias: default
+  version: latest
+
+instance_groups:
+- name: auth-servers
+  instances: 1
+  stemcell: default
+  azs: [z1]
+  vm_type: default
+  persistent_disk_type: default
+  networks:
+  - name: default
+  jobs:
+  - name: glauth
+    release: glauth
+    #propertites: see manifests/operations/*
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  canary_watch_time: 30000-600000
+  update_watch_time: 5000-600000

@@ -1,0 +1,73 @@
+############
+# glauth.cfg
+
+#################
+# General configuration.
+debug = <%= p('debug') %>
+syslog = <%= p('syslog') %>
+<%- if_p('yubikey') do |yubi| -%>
+# allow yubikey if configured
+yubikeyclientid = <%= p('yubikey.clientid') %>
+yubikeysecret = <%= p('yubikey.clientsecret') %>
+<%- end -%>
+
+#################
+# The frontend section controls how clients connect to the proxy.
+[frontend]
+  tls = <%= p('frontend.tls') %>
+  listen = "0.0.0.0:<%= p('frontend.listen') %>"
+  cert = "/var/vcap/jobs/glauth/ssl/frontend.crt"
+  key = "/var/vcap/jobs/glauth/ssl/frontend.key"
+
+#################
+# The backend section controls the data store.
+[backend]
+  datastore = "<%= p('backend.datastore') %>"
+  <%- if_p('backend.servers') do |servers| -%>
+  # need to test this
+  servers = <% servers %>
+  <%- end.else do -%>
+  baseDN = "<%= p('backend.basedn') %>"
+  <%- end -%>
+
+#################
+# The groups section contains a hardcoded list of valid users.
+<%- if_p('groups') do |groups| -%>
+  <%- groups.each do |group| -%>
+[[groups]]
+    <%- group.each_pair do |attribute, value| -%>
+      <%- if value.is_a? Integer -%>
+  <%= "#{attribute} = #{value}" %>
+      <%- elsif value.is_a? Array -%>
+  <%= "#{attribute} = #{value}" %>
+      <%- else -%>
+  <%= "#{attribute} = \"#{value}\"" %>
+      <%- end -%>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
+
+#################
+# The users section contains a hardcoded list of valid users.
+#   to create a passSHA256:   echo -n "mysecret" | openssl dgst -sha256
+<%- if_p('users') do |users| -%>
+  <%- users.each do |user| -%>
+[[users]]
+    <%- user.each_pair do |attribute, value| -%>
+      <%- if value.is_a? Integer -%>
+  <%= "#{attribute} = #{value}" %>
+      <%- else -%>
+  <%= "#{attribute} = \"#{value}\"" %>
+      <%- end -%>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
+
+#################
+# Enable and configure the optional REST API here.
+[api]
+  enabled = <%= p('api.enabled') %>
+  tls = <%= p('api.tls') %>
+  listen = "0.0.0.0:<%= p('api.listen') %>"
+  cert = "/var/vcap/jobs/glauth/ssl/api.crt"
+  key = "/var/vcap/jobs/glauth/ssl/api.key"

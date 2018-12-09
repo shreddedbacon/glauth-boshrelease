@@ -1,0 +1,110 @@
+---
+name: glauth
+
+templates:
+  bin/glauth_ctl.sh.erb: bin/glauth_ctl
+  config/glauth.cfg.erb: config/glauth.cfg
+  ssl/frontend.crt.erb: ssl/frontend.crt
+  ssl/frontend.key.erb: ssl/frontend.key
+  ssl/api.crt.erb: ssl/api.crt
+  ssl/api.key.erb: ssl/api.key
+
+packages:
+  - glauth
+
+properties:
+  debug:
+    default: false
+    description: "enable debug output"
+  syslog:
+    default: false
+    description: "enable syslog"
+  yubikey:
+    clientid:
+      optional: true
+      description: "yubikey client id"
+    clientsecret:
+      optional: true
+      description: "yubikey client secret"
+  frontend:
+    tls:
+      default: true
+      description: "enable tls for ldap service"
+    listen:
+      default: 636
+      description: "listening port for ldap service"
+    certificate:
+      optional: true
+      description: "certificate for ldap service"
+    private_key:
+      optional: true
+      description: "private key for ldap service"
+  backend:
+    datastore:
+      default: config
+      description: "location of datastore, config or ldap"
+    basedn:
+      default: "dc=glauth,dc=com"
+      description: "base dn for config datastore"
+    servers:
+      optional: true
+      description: "list of ldap servers and their ports"
+      example:
+        - "ldaps://server1:636"
+        - "ldaps://server2:636"
+    insecure:
+      optional: true
+      description: "ignore ssl certs connecting to backend servers, true or false"
+  api:
+    enabled:
+      default: true
+      description: "enable rest api"
+    tls:
+      default: true
+      description: "enable tls on rest api"
+    listen:
+      default: 5555
+      description: "port to listen on for api"
+    certificate:
+      optional: true
+      description: "certificate for api service"
+    private_key:
+      optional: true
+      description: "private key for api service"
+  groups:
+    description: "group to create"
+    optional: true
+    example:
+      - name: superheros
+        unixid: 5501
+      - name: svcaccts
+        unixid: 5502
+      - name: vpn
+        unixid: 5503
+        includegroups:
+          - 5501
+  users:
+    description: "users to create"
+    optional: true
+    example:
+      - name: user1
+        unixid: 5001
+        primarygroup: 5501
+        passsha256: "6478579e37aff45f013e14eeb30b3cc56c72ccdc310123bcdf53e0333e3f416a" #dogood
+      - name: user2
+        givenname: John
+        sn: Doe
+        mail: jdoe@glauth.com
+        unixid: 5002
+        primarygroup: 5501
+        loginShell: /bin/sh
+        homeDir: /root
+        passsha256: "6478579e37aff45f013e14eeb30b3cc56c72ccdc310123bcdf53e0333e3f416a" # dogood
+      - name: serviceuser
+        unixid: 5003
+        primarygroup: 5502
+        passsha256: "652c7dc687d98c9889304ed2e408c74b611e86a40caa51c4b43f1dd5913c5cd0" # mysecret
+      - name: optuser
+        unixid: 5004
+        primarygroup: 5502
+        passsha256: "652c7dc687d98c9889304ed2e408c74b611e86a40caa51c4b43f1dd5913c5cd0" # mysecret

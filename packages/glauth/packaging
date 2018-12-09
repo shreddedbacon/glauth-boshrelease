@@ -1,0 +1,4 @@
+set -e
+
+cp glauth/glauth ${BOSH_INSTALL_TARGET}/.
+chmod +x ${BOSH_INSTALL_TARGET}/glauth

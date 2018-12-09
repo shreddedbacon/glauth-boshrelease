@@ -1,0 +1,30 @@
+---
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/users?/-
+  value:
+    name: user1
+    unixid: 5001
+    primarygroup: 5501
+    passsha256: "6478579e37aff45f013e14eeb30b3cc56c72ccdc310123bcdf53e0333e3f416a" #dogood
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/users?/-
+  value:
+    name: user2
+    givenname: John
+    sn: Doe
+    mail: jdoe@glauth.com
+    unixid: 5002
+    primarygroup: 5501
+    loginShell: /bin/sh
+    homeDir: /root
+    passsha256: "6478579e37aff45f013e14eeb30b3cc56c72ccdc310123bcdf53e0333e3f416a" # dogood
+
+- type: replace
+  path: /instance_groups/name=auth-servers/jobs/name=glauth/properties?/users?/-
+  value:
+    name: serviceuser
+    unixid: 5003
+    primarygroup: 5502
+    passsha256: "652c7dc687d98c9889304ed2e408c74b611e86a40caa51c4b43f1dd5913c5cd0" # mysecret
